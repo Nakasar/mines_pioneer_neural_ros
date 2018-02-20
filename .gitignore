@@ -1,0 +1,11 @@
+*.pyc
+roslib/*
+*.json
+
+# Ignore folders
+graphs/
+logs/
+networks/
+video/
+__pycache__/
+figures minoides/
