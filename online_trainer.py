@@ -57,7 +57,7 @@ def get_relative_error(position, target, size):
     return relative_error
 
 #Il faut ajouter devant les atan un paramètres pour atténuer les oscillations
-def theta_s(x,y, ratio, experimental_theta):
+def theta_s(x, y, ratio, experimental_theta):
     """Returns the theta shift of the robot
     The goal of this shift if to prevent the robot from being stuck
     when he reach a local minimum of the standard error"""
@@ -155,7 +155,6 @@ class OnlineTrainer:
 
             t = time.time()
 
-
             # Get the robot new position
             position = self.robot.get_position() # this takes 50 ms to process
             sensors = self.robot.get_sensors_distances()
@@ -219,7 +218,7 @@ class OnlineTrainer:
                     sensors_angle = {0: -math.pi / 6, 1: -math.pi/3, 2: -2*math.pi/3, 3: -5*math.pi/6, 4: 5*math.pi/6, 5: 2*math.pi/3, 6: math.pi/3, 7: math.pi/6}
                     # TODO: Modify grad for proper retro-propagation
                     for k in range(len(sensors)):
-                        offset = network_input[3 + k] * delta_t * self.robot.r / self.robot.R
+                        offset = network_input[3 + k] * (time.time() - t) * self.robot.r / self.robot.R
                         if k == 0 or k == 7:
                             vects = [1, -1]
                         elif k == 1 or k == 2:

@@ -93,7 +93,7 @@ def simulation(options):
                     json_obj = json.load(fp)
             except:
                 print("Warning : could not find or open \""+WeightFileName+"\", starting from a random network...")
-                network = NN(3, HiddenNeuronNumber, 2)
+                network = NN(3 + len(robot.activated_sensors), HiddenNeuronNumber, 2)
             else:
                 # Check the size of the saved network
                 n = len(json_obj["output_weights"])
@@ -101,7 +101,7 @@ def simulation(options):
                     print("Warning : the config.cfg file wanted ", HiddenNeuronNumber, " hidden neurons, but the saved network has ", n, " hidden neurons. The saved network will still be used...", sep='')
                     HiddenNeuronNumber = n
 
-                network = NN(3, HiddenNeuronNumber, 2)
+                network = NN(3 + len(robot.activated_sensors), HiddenNeuronNumber, 2)
                 # Load the weight values
 
                 for i in range(3):
@@ -111,9 +111,9 @@ def simulation(options):
                     for j in range(2):
                         network.wo[i][j] = json_obj["output_weights"][i][j]
         else:
-            network = NN(3, HiddenNeuronNumber, 2)
+            network = NN(3 + len(robot.activated_sensors), HiddenNeuronNumber, 2)
     else:
-        network = NN(3, HiddenNeuronNumber, 2)
+        network = NN(3 + len(robot.activated_sensors), HiddenNeuronNumber, 2)
 
     if NewSigmoid:
         network.newSigmoid = True
