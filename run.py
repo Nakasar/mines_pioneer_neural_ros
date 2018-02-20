@@ -7,8 +7,8 @@
 
 from BackProp_Python_v2 import NN
 from vrep_pioneer_simulation import VrepPioneerSimulation
-from rdn import Pioneer
-import rospy
+#from rdn import Pioneer
+#import rospy
 from online_trainer import OnlineTrainer
 import json
 import threading
@@ -56,7 +56,7 @@ def simulation(options):
     LearningStep = float(options["LearningStep"])
     ThetaShiftRatio = float(options["ThetaShiftRatio"])
     Size = float(options["Size"])
-    
+
     FixedStartingPosition = options["FixedStartingPosition"]=='1'
     StartingPositionX = float(options["StartingPositionX"])
     StartingPositionY = float(options["StartingPositionY"])
@@ -148,7 +148,7 @@ def simulation(options):
             for i in range(len(location)):
                 location[i] = float(location[i])
             robot.set_position2(location)
-            
+
     if FixedTargetPosition:
         target = [TargetPositionX, TargetPositionY, TargetPositionTheta]
     else:
@@ -262,4 +262,3 @@ if __name__=="__main__":
         exit()
     # Run the lesson
     simulation(file_options)
-

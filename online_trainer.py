@@ -200,6 +200,8 @@ class OnlineTrainer:
             if self.training:
 
                 if prediction:
+                    sensors_influence_rd = 0
+                    sensors_influence_rg = 0
 
                     r = self.robot.r
                     R = self.robot.R
@@ -213,8 +215,24 @@ class OnlineTrainer:
                     else:
                         theta_target = ((target[2] + math.pi)%(2 * math.pi)) - math.pi # Without theta_shift
 
+                    # ce dictionnaire contient les angles des capteurs (utile pour obtenir leur influence)
+                    sensors_angle = {0: -math.pi / 6, 1: -math.pi/3, 2: -2*math.pi/3, 3: -5*math.pi/6, 4: 5*math.pi/6, 5: 2*math.pi/3, 6: math.pi/3, 7: math.pi/6}
+                    # TODO: Modify grad for proper retro-propagation
+                    for k in range(len(sensors)):
+                        offset = network_input[3 + k] * delta_t * self.robot.r / self.robot.R
+                        if k == 0 or k == 7:
+                            vects = [1, -1]
+                        elif k == 1 or k == 2:
+                            vects = [1, 1]
+                        elif k == 3 or k == 4:
+                            vects = [-1, 1]
+                        else:
+                            vects = [-1, -1]
+                        sensors_influence_rd += vects[0] * offset
+                        sensors_influence_rg += vects[1] * offset
+
                     grad = get_grad(self, r, R, size, x, y, theta, x_target, y_target, theta_target, delta_t)
-                    grad = [gain * grad[0], gain * grad[1]]
+                    grad = [gain * (grad[0] - sensors_influence_rg), gain * (grad[1] - sensors_influence_rd)]
 
                 else: # Old method
                     sensors_influence_rd = 0
